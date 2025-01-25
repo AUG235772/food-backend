@@ -27,16 +27,6 @@ app.use('/restaurants', restaurantRoutes);
 app.use('/orders', sessionTimeout, orderRoutes);
 app.use('/admin', adminRoutes);
 app.use('/devices', deviceRoutes);
-
-// Connect to MongoDB
-mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
-
-// Use routes
-app.use('/auth', authRoutes);
-app.use('/restaurants', restaurantRoutes);
-app.use('/orders', orderRoutes);
-app.use('/admin', adminRoutes);
-
 // Define User Schema
 const userSchema = new mongoose.Schema({
     name: String,

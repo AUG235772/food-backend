@@ -21,6 +21,11 @@ app.use(express.json());
 // Connect to MongoDB
 mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
+// Import models
+require('./models/user');
+require('./models/restaurant');
+require('./models/order');
+
 // Use routes with session timeout middleware
 app.use('/auth', authRoutes);
 app.use('/restaurants', restaurantRoutes);

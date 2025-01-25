@@ -32,16 +32,6 @@ app.use('/restaurants', restaurantRoutes);
 app.use('/orders', sessionTimeout, orderRoutes);
 app.use('/admin', adminRoutes);
 app.use('/devices', deviceRoutes);
-// Define User Schema
-const userSchema = new mongoose.Schema({
-    name: String,
-    mobileNumber: String,
-    tableNumber: Number,
-    password: String
-});
-
-const User = mongoose.model('User', userSchema);
-
 // Define Restaurant Schema
 const restaurantSchema = new mongoose.Schema({
     name: String,

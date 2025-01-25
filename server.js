@@ -19,12 +19,11 @@ const io = socketIo(server);
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(config.mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-});
+const mongoURI = 'mongodb+srv://aug235772:R%21PnCuW65ih.%405m@cluster0.k45ng.mongodb.net/Cluster0?retryWrites=true&w=majority';
+
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Error connecting to MongoDB:', err));
 
 // Import models
 require('./models/user');

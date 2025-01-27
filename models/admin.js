@@ -1,9 +1,15 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const adminSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    activeSessions: { type: Number, default: 0 }
+const Admin = sequelize.define('Admin', {
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
 });
 
-module.exports = mongoose.model('Admin', adminSchema);
+module.exports = Admin;

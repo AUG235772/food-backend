@@ -1,9 +1,19 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const deviceSchema = new mongoose.Schema({
-    restaurantId: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant' },
-    deviceId: String,
-    loginTime: { type: Date, default: Date.now }
+const Device = sequelize.define('Device', {
+    restaurantId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    deviceId: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    loginTime: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    }
 });
 
-module.exports = mongoose.model('Device', deviceSchema);
+module.exports = Device;

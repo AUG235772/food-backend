@@ -1,10 +1,27 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const restaurantSchema = new mongoose.Schema({
-    name: String,
-    username: String,
-    password: String,
-    menu: [{ name: String, price: Number }]
+const Restaurant = sequelize.define('Restaurant', {
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    menu: {
+        type: DataTypes.JSON,
+        allowNull: true
+    },
+    activeSessions: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    }
 });
 
-module.exports = mongoose.model('Restaurant', restaurantSchema);
+module.exports = Restaurant;

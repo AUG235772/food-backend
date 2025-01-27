@@ -1,28 +1,31 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const config = require('../config');
 
 const router = express.Router();
 
-// User Registration
+// Register
 router.post('/register', async (req, res) => {
-    const { name, mobileNumber, tableNumber, password } = req.body;
+    const { name, mobileNumber, password, tableNumber } = req.body;
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, mobileNumber, tableNumber, password: hashedPassword });
-    await user.save();
-    res.status(201).send('User registered');
+    const user = await User.create({ name, mobileNumber, password: hashedPassword, tableNumber });
+
+    res.status(201).send(user);
 });
 
-// User Login
+// Login
 router.post('/login', async (req, res) => {
     const { mobileNumber, password } = req.body;
-    const user = await User.findOne({ mobileNumber });
+
+    const user = await User.findOne({ where: { mobileNumber } });
     if (!user || !await bcrypt.compare(password, user.password)) {
         return res.status(401).send('Invalid credentials');
     }
-    const token = jwt.sign({ userId: user._id }, config.jwtSecret);
+
+    const token = jwt.sign({ userId: user.id }, config.jwtSecret, { expiresIn: '1h' });
     res.send({ token });
 });
 

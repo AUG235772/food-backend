@@ -1,16 +1,32 @@
 const jwt = require('jsonwebtoken');
-const config = require('../config');
+const User = require('../models/user');
 
-const sessionTimeout = (req, res, next) => {
-    const token = req.headers['authorization'].split(' ')[1];
-    const decoded = jwt.verify(token, config.jwtSecret);
-    const currentTime = Math.floor(Date.now() / 1000);
+const sessionTimeout = async (req, res, next) => {
+    try {
+        const token = req.header('Authorization').replace('Bearer ', '');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findByPk(decoded.userId);
 
-    if (currentTime - decoded.iat > 5400) { // 1.5 hours in seconds
-        return res.status(401).send('Session expired. Please log in again.');
+        if (!user) {
+            return res.status(401).send({ error: 'Please authenticate.' });
+        }
+
+        // Add logic for session timeout
+        // For instance, check if the user's last activity was more than a certain period ago
+        const sessionExpiryTime = 30 * 60 * 1000; // 30 minutes
+        if (Date.now() - new Date(user.lastActivity).getTime() > sessionExpiryTime) {
+            return res.status(401).send({ error: 'Session timed out. Please log in again.' });
+        }
+
+        // Update last activity time
+        user.lastActivity = new Date();
+        await user.save();
+
+        req.user = user;
+        next();
+    } catch (error) {
+        res.status(401).send({ error: 'Please authenticate.' });
     }
-
-    next();
 };
 
 module.exports = sessionTimeout;

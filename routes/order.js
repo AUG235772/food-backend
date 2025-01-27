@@ -2,18 +2,16 @@ const express = require('express');
 const Order = require('../models/order');
 const router = express.Router();
 
-// Place Order
+// Place an order
 router.post('/', async (req, res) => {
-    const { tableNumber, items, restaurantId } = req.body;
-    const totalAmount = items.reduce((sum, item) => sum + item.price, 0);
-    const order = new Order({ tableNumber, items, status: 'Preparing', restaurantId, totalAmount });
-    await order.save();
-    res.status(201).send('Order placed');
+    const { userId, restaurantId, items, total } = req.body;
+    const order = await Order.create({ userId, restaurantId, items, total });
+    res.status(201).send(order);
 });
 
-// Fetch Orders
+// Fetch all orders
 router.get('/', async (req, res) => {
-    const orders = await Order.find().populate('restaurantId');
+    const orders = await Order.findAll();
     res.send(orders);
 });
 

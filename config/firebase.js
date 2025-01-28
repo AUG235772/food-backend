@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
-const serviceAccount = require('./servesmart-services-firebase-adminsdk-fbsvc-3c580ec9a1.json'); // Ensure this path is correct
+
+const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_CREDENTIALS, 'base64').toString('utf8'));
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)

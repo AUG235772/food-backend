@@ -1,5 +1,6 @@
+require('dotenv').config();
 const express = require('express');
-const sequelize = require('./config/database');
+const db = require('./config/firebase'); // Use Firebase configuration
 const User = require('./models/user');
 const Restaurant = require('./models/restaurant');
 const Order = require('./models/order');
@@ -16,10 +17,7 @@ const app = express();
 
 app.use(express.json());
 
-// Sync database
-sequelize.sync().then(() => {
-    console.log('Database synced');
-});
+// We no longer need to sync the database since Firestore handles it automatically
 
 // Use routes with session timeout middleware
 app.use('/auth', authRoutes);

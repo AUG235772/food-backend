@@ -1,23 +1,16 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const db = require('../config/firebase');
 
-const Order = sequelize.define('Order', {
-    userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+const Order = {
+    create: async (data) => {
+        const orderRef = db.collection('orders').doc();
+        await orderRef.set(data);
+        return { id: orderRef.id, ...data };
     },
-    restaurantId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    items: {
-        type: DataTypes.JSON,
-        allowNull: false
-    },
-    total: {
-        type: DataTypes.FLOAT,
-        allowNull: false
+    findAll: async () => {
+        const orderRef = db.collection('orders');
+        const snapshot = await orderRef.get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     }
-});
+};
 
 module.exports = Order;

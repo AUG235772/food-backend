@@ -1,27 +1,16 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const db = require('../config/firebase');
 
-const Restaurant = sequelize.define('Restaurant', {
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
+const Restaurant = {
+    create: async (data) => {
+        const restaurantRef = db.collection('restaurants').doc();
+        await restaurantRef.set(data);
+        return { id: restaurantRef.id, ...data };
     },
-    username: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    menu: {
-        type: DataTypes.JSON,
-        allowNull: true
-    },
-    activeSessions: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0
+    findAll: async () => {
+        const restaurantRef = db.collection('restaurants');
+        const snapshot = await restaurantRef.get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     }
-});
+};
 
 module.exports = Restaurant;

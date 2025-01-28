@@ -1,19 +1,20 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const db = require('../config/firebase');
 
-const Device = sequelize.define('Device', {
-    restaurantId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+const Device = {
+    create: async (data) => {
+        const deviceRef = db.collection('devices').doc();
+        await deviceRef.set(data);
+        return { id: deviceRef.id, ...data };
     },
-    deviceId: {
-        type: DataTypes.STRING,
-        allowNull: false
+    findAll: async () => {
+        const deviceRef = db.collection('devices');
+        const snapshot = await deviceRef.get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     },
-    loginTime: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
+    delete: async (id) => {
+        const deviceRef = db.collection('devices').doc(id);
+        await deviceRef.delete();
     }
-});
+};
 
 module.exports = Device;

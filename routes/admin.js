@@ -20,7 +20,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
-    const admin = await Admin.findOne({ where: { username } });
+    const admin = await Admin.findOne(username);
     if (!admin || !await bcrypt.compare(password, admin.password)) {
         return res.status(401).send('Invalid credentials');
     }

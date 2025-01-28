@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
 
 // Remove a device (logout)
 router.delete('/:id', async (req, res) => {
-    await Device.destroy({ where: { id: req.params.id } });
+    await Device.delete(req.params.id);
     res.send('Device logged out');
 });
 
